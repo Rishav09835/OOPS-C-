@@ -7,12 +7,12 @@ class Book
 {
 private:
     int bookid;
-    string title;
+    char title[100];
     float price;
 public:
     Book(){
         bookid = 0;
-        title = "none";
+        strcpy(title,"none");
         price = 0;
     }
     void getBookDetails(){
@@ -20,7 +20,7 @@ public:
         cin>>bookid;
         cin.ignore(); //ignore leftover new line.
         cout<<"Enter Title : ";
-        getline(cin,title);
+        cin.getline(title,100);
         cout<<"Enter price : ";
         cin>>price;
     }
@@ -42,12 +42,29 @@ public:
         fout.close();
         return 1;
     }
+
+    void viewAllBooks(){
+        ifstream fin;
+        fin.open("books.txt", ios::in|ios::binary);
+        if(!fin)
+            cout<<"\n file not found";
+        else{
+            fin.read((char*)this, sizeof(*this));
+            while(!fin.eof()){
+            showBookDetails();
+            fin.read((char*)this, sizeof(*this));
+            }
+            fin.close();
+        }
+    }
 };
 
 int main(){
-    Book b1,b2;
+    Book b1,b2,b3;
     b1.getBookDetails();
-    b1.showBookDetails();
     b1.storeBookDetails();
+    b2.getBookDetails();
     b2.storeBookDetails();
+    b3.viewAllBooks();
+
 }
