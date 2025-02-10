@@ -57,14 +57,31 @@ public:
             fin.close();
         }
     }
+    void searchBook(const char * t){
+        int flag = 0;
+        ifstream fin;
+        fin.open("books.txt",ios::in|ios::binary);
+        if(!fin)
+            cout<<"\n File not found";
+        else{
+            fin.read((char *)this, sizeof(*this));
+            while (!fin.eof())
+            {
+                if(!strcmp(t,this->title))
+                {    flag = 1;
+                    showBookDetails();
+                }
+                fin.read((char*)this, sizeof(*this));
+            }
+            if(flag == 0) cout<<"Record not found..";
+            fin.close();
+            
+        }
+    }
 };
 
 int main(){
-    Book b1,b2,b3;
-    b1.getBookDetails();
-    b1.storeBookDetails();
-    b2.getBookDetails();
-    b2.storeBookDetails();
-    b3.viewAllBooks();
+    Book b1;
+    b1.searchBook("Attitude");
 
 }
