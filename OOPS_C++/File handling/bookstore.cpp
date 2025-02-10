@@ -1,6 +1,7 @@
 #include<iostream>
 #include<fstream>
 #include<string.h>
+#include<stdio.h>
 using namespace std;
 
 class Book
@@ -78,10 +79,30 @@ public:
             
         }
     }
+    void deleteBook(const char* t){
+        ifstream fin;
+        ofstream fout;
+        fin.open("books.txt",ios::in|ios::binary);
+        if(!fin) cout<<"\nfile not found...";
+        else{
+            fout.open("temp.txt",ios::out|ios::binary);
+            fin.read((char*)this,sizeof(*this));
+            while(!fin.eof()){
+                if(strcmp(t,this->title)) //0 if equal else other values.
+                    fout.write((char*)this,sizeof(*this));
+                fin.read((char*)this, sizeof(*this));
+            }
+            fin.close();
+            fout.close();
+            remove("books.txt");
+            rename("temp.txt","books.txt");
+        }
+    }
 };
 
 int main(){
     Book b1;
-    b1.searchBook("Attitude");
-
+    b1.viewAllBooks();
+    b1.deleteBook("Attitude is king");
+    b1.viewAllBooks();
 }
