@@ -1,7 +1,5 @@
-#include<iostream>
-#include<fstream>
-#include<string.h>
-#include<stdio.h>
+#include<bits/stdc++.h>
+#include<conio.h>
 using namespace std;
 
 class Book
@@ -98,11 +96,80 @@ public:
             rename("temp.txt","books.txt");
         }
     }
+    void updateBookRecord(const char* t){
+        fstream file;
+        file.open("books.txt",ios::in|ios::out|ios::ate|ios::binary);
+        file.seekg(0);
+        file.read((char*)this,sizeof(*this));
+        while (!file.eof())
+        {
+            if(!strcmp(t,title)){
+                getBookDetails();
+                streampos pos = file.tellp();
+                file.seekp(pos-sizeof(*this));
+                file.write((char*)this, sizeof(*this));
+            }
+            file.read((char*)this,sizeof(*this));
+        }
+        file.close();
+
+    }
 };
+
+int menu(){
+    int choice;
+    cout<<"\n Personal Book Management System";
+    cout<<"\n1. Add Book Record";
+    cout<<"\n2. View All Book Records";
+    cout<<"\n3. Search Book Record";
+    cout<<"\n4. Delete Book Record";
+    cout<<"\n5. Update Book Record";
+    cout<<"\n6. Exit";
+    
+    cout<<"\n\n Enter Your Choice : ";
+    cin>>choice;
+    cin.ignore();
+    return choice;
+}
 
 int main(){
     Book b1;
-    b1.viewAllBooks();
-    b1.deleteBook("Attitude is king");
-    b1.viewAllBooks();
+    char title[100];
+    while (1)
+    {  system("cls");
+        switch(menu())
+        {
+            case 1: 
+                b1.getBookDetails();
+                b1.storeBookDetails();
+                cout<<"\nRecord Inserted Successfully"<<endl;
+                break;
+            case 2:
+                b1.viewAllBooks();
+                break;
+            case 3:
+                cout<<"Enter Book title to Search Book: ";
+                cin.getline(title,100);
+                b1.searchBook(title);
+                break;
+            case 4:
+                cout<<"Enter Book title to Delete Book: ";
+                cin.getline(title,100);
+                b1.deleteBook(title);
+                break;
+            case 5:
+                cout<<"Enter Book Title to update Book: ";
+                cin.getline(title,100);
+                b1.updateBookRecord(title);
+                break;
+            case 6:
+                cout<<"\nThank you!!";
+                exit(0);
+            default:
+                cout<<"\nInvalid choice ";
+
+        }
+        getch();
+    }
+    
 }
